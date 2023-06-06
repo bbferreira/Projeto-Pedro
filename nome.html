@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Agendamento de Barbearia - Informe seu nome</title>
+  <script src="script.js"></script>
+</head>
+<body>
+  <h1>Agendamento de Barbearia - Informe seu nome</h1>
+
+  <!-- Passo 3: Preencher nome e agendar -->
+  <input type="text" id="nome" placeholder="Seu nome" required>
+  <button onclick="confirmarAgendamento()">Agendar</button>
+
+  <script>
+    function confirmarAgendamento() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const servico = urlParams.get('servico');
+      const horario = urlParams.get('horario');
+      const nome = document.getElementById('nome').value;
+
+      if (!nome) {
+        alert('Informe seu nome');
+        return;
+      }
+      const dataAgendamento = new Date().toLocaleDateString();
+      const mensagem = `Agendamento de ${servico}\n\npara o horário ${horario}\n\n  Cliente: ${nome}\n\nData: ${dataAgendamento}`;
+      const encodedMensagem = encodeURIComponent(mensagem);
+      const numeroWhatsapp = '14996977125';
+      const linkWhatsapp = `https://api.whatsapp.com/send?phone=${numeroWhatsapp}&text=${encodedMensagem}`;
+      window.open(linkWhatsapp, '_blank');
+    }
+  </script>
+</body>
+</html>

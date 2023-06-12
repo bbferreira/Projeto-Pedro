@@ -20,7 +20,7 @@
    * colors
    */
 
-  --rich-black-fogra-39_50: hsla(0, 0%, 5%, 0.5);
+  --rich-black-fogra-39_50: hsla(0, 0%, 0%, 0.822);
   --rich-black-fogra-39: hsl(0, 0%, 0%);
   --indian-yellow_10: hsla(36, 61%, 58%, 0.1);
   --indian-yellow: hsl(36, 61%, 58%);
@@ -39,6 +39,7 @@
   --white_50: hsla(0, 0%, 100%, 0.5);
   --white: hsl(0, 0%, 100%);
   --jet: hsl(0, 0%, 21%);
+  --yellow: hsl(39, 93%, 50%);
 
   /**
    * typography
@@ -229,7 +230,7 @@ body {
 
 .btn {
   color: var(--white);
-  background-color: var(--indian-yellow);
+  background-color: var(--yellow);
   display: flex;
   align-items: center;
   gap: 10px;

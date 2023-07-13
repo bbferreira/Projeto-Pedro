@@ -492,13 +492,14 @@ body {
 }
 
 .pricing-card {
-  background-color: var(--indian-yellow_10);
-  padding: 20px 25px;
+  background-color: #000000a8;;
+  padding: 20px;
   border-radius: var(--radius-5);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 15px;
+  gap: 2px;
+  width: 100%;
 }
 
 .pricing-card .card-banner {
@@ -980,7 +981,17 @@ a.contact-link:is(:hover, :focus) { color: var(--white); }
     align-self: flex-start;
     line-height: 1.6;
   }
+
   
+    .clickable {
+      cursor: pointer;
+      background-color: #ccc;
+      padding: 10px;
+    }
+
+    .clicked {
+      background-color: orange;
+    }
 
 
   /**

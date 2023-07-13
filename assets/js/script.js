@@ -89,54 +89,23 @@ const filter = function () {
 
 addEventOnElem(filterBtns, "click", filter);
 
-
-//Status aberto ou fechado
-
-
-// Defina os dias e horários em que o site está aberto
-const openDays = [1, 2, 3, 4, 5,6]; // Segunda a Sexta
-const openHours = [ 10, 11, 14, 15, 16,17,18]; // 9h às 12h e 14h às 17h
-
-// Obtenha a hora atual do usuário
-const now = new Date();
-const dayOfWeek = now.getDay(); // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
-const hourOfDay = now.getHours();
+// Serviços
 
 
 
-// Verifique se o site está aberto ou fechado
-if (openDays.includes(dayOfWeek) && openHours.includes(hourOfDay)) {
-  document.getElementById("status").textContent = "Estamos abertos agora!";
-} else {
-  document.getElementById("status").textContent = "Estamos fechados agora.";
+function selecionarServico(elemento) {
+  elemento.classList.toggle('selected');
+}
+
+var divs = document.getElementsByClassName('pricing-card');
+for (var i = 0; i < divs.length; i++) {
+  divs[i].addEventListener('click', function () {
+    selecionarServico(this);
+    var informacao = this.innerHTML;
+    console.log(informacao);
+  });
 }
 
 
-const cabeçalho = document.querySelector('.header');
-const openStatus = document.createElement('span');
-openStatus.classList.add('open-status');
-header.appendChild(openStatus);
+// Criar um array para armazenar as informa
 
-const agora = new Date();
-const diaSemana = now.getDay();
-
-if (dayOfWeek >= 1 && dayOfWeek <= 6) {
-  const hour = now.getHours();
-
-  if (hour >= 10 && hour < 12 || (hour >= 14 && hour < 18)) {
-    openStatus.textContent = 'Estamos abertos Agora';
-    openStatus.classList.add('open');
-    openStatus.style.color = 'green';
-  } else {
-    openStatus.textContent = 'Estamos fechados';
-    openStatus.classList.add('closed');
-    openStatus.style.color = 'red';
-  }
-} else {
-  openStatus.textContent = 'Estamos fechados';
-  openStatus.classList.add('closed');
-}
-
-
-// Adiciona a classe `.open-status` ao elemento `span`
-openStatus.classList.add('open-status');  

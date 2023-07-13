@@ -43,3 +43,4 @@ const horariosDisponiveis = [
     const url = `nome.html?${urlParams.toString()}`;
     window.location.href = url;
   }
+

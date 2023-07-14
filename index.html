@@ -171,7 +171,7 @@
             <ul class="grid-list">
 
               <li data-filter="shaving">
-                <div class="pricing-card" onclick="selecionarServico(this)">
+                <div class="pricing-card" onclick="onClickFunction()">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
                     <img src="./assets/images/pricing-1.jpg" width="90" height="90" alt="Hair Cutting & Fitting"
@@ -179,18 +179,18 @@
                   </figure>
 
                   <div class="wrapper">
-                    <h3 class="h3 card-title" style="color: #ffffff;">Corte</h3>
+                    <h3 class="h3 card-title" id="titulo" style="color: #ffffff;">Corte</h3>
 
-                    <p class="card-text">45 minutos</p>
+                    <p class="card-text" id="paragrafo">45 minutos</p>
                   </div>
 
-                  <data class="card-price" value="25">R$25</data>
+                  <data class="card-price"  id="data" value="25">R$25</data>
 
                 </div>
               </li>
 
               <li data-filter="shaving">
-                <div class="pricing-card" onclick="selecionarServico(this)">
+                <div class="pricing-card" onclick="onClickFunction()">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
                     <img src="./assets/images/pricing-2.jpg" width="90" height="90" alt="Shaving & Facial"
@@ -198,17 +198,17 @@
                   </figure>
 
                   <div class="wrapper">
-                    <h3 class="h3 card-title" style="color: #ffffff;">Barba</h3>
+                    <h3 class="h3 card-title" style="color: #ffffff;" id="titulo">Barba</h3>
 
-                    <p class="card-text">45 minutos</p>
+                    <p class="card-text" id="paragrafo">45 minutos</p>
                   </div>
 
-                  <data class="card-price" value="15">R$15</data>
+                  <data class="card-price" value="15" id="data">R$15</data>
 
                 </div>
               </li>
               <li>
-                <div class="pricing-card" onclick="selecionarServico(this)" style="padding: 20px;">
+                <div class="pricing-card" onclick="onClickFunction()" style="padding: 20px;">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
                     <img src="./assets/images/pricing-5.jpg" width="90" height="90" alt="Beauty & Spa"
@@ -226,7 +226,7 @@
                 </div>
               </li>
               <li data-filter="body-treatments">
-                <div class="pricing-card" onclick="selecionarServico(this)">
+                <div class="pricing-card" onclick="onClickFunction()">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
                     <img src="./assets/images/pricing-4.jpg" width="90" height="90" alt="Body Massage"
@@ -244,7 +244,7 @@
                 </div>
               </li>
               <li>
-                <div class="pricing-card" onclick="selecionarServico(this)">
+                <div class="pricing-card" onclick="onClickFunction()">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
                     <img src="./assets/images/pricing-4.jpg" width="90" height="90" alt="Body Massage"

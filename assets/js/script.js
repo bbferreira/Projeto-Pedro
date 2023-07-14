@@ -91,21 +91,76 @@ addEventOnElem(filterBtns, "click", filter);
 
 // Serviços
 
-
-
-function selecionarServico(elemento) {
-  elemento.classList.toggle('selected');
+function onClickFunction() {
+  const elemento = document.querySelector('.pricing-card');
+  selecionarServico(elemento);
+  selecionarDiv(elemento);
 }
 
-var divs = document.getElementsByClassName('pricing-card');
-for (var i = 0; i < divs.length; i++) {
-  divs[i].addEventListener('click', function () {
-    selecionarServico(this);
-    var informacao = this.innerHTML;
-    console.log(informacao);
-  });
+const elemento = document.querySelector('.pricing-card');
+elemento.onclick = onClickFunction;
+
+
+
+function selecionarServico(element) {
+  // Obtendo as informações dentro da div
+  const titulo = element.querySelector('#titulo').innerText;
+  const paragrafo = element.querySelector('#paragrafo').innerText;
+  const preco = element.querySelector('#data').getAttribute('value');
+
+  // Imprimindo as informações
+  console.log(titulo); // "Corte"
+  console.log(paragrafo); // "45 minutos"
+  console.log(preco); // "25"
+
+  // Aqui você pode fazer o que desejar com as informações, como salvá-las em uma variável ou realizar alguma ação adicional.
 }
 
 
-// Criar um array para armazenar as informa
 
+
+
+// Obtendo todas as divs com a classe "pricing-card"
+const divsPricingCard = document.querySelectorAll('.pricing-card');
+
+// Array para armazenar as informações das divs
+const informacoesDivs = [];
+
+// Iterando sobre as divs "pricing-card"
+divsPricingCard.forEach((divPricingCard) => {
+  // Obtendo as informações dentro da div
+  const titulo = divPricingCard.querySelector('#titulo').innerText;
+  const paragrafo = divPricingCard.querySelector('#paragrafo').innerText;
+  const preco = divPricingCard.querySelector('#data').getAttribute('value');
+
+  // Criando um objeto com as informações da div
+  const informacoes = {
+    titulo,
+    paragrafo,
+    preco
+  };
+  
+
+  // Adicionando o objeto ao array
+  informacoesDivs.push(informacoes);
+});
+
+// Imprimindo as informações das divs
+informacoesDivs.forEach((informacoes, index) => {
+  console.log(`Informações da div ${index + 1}:`);
+  console.log(informacoes.titulo);
+  console.log(informacoes.paragrafo);
+  console.log(informacoes.preco);
+});
+
+
+function selecionarDiv(element) {
+  element.style.backgroundColor = "orange";
+}
+
+
+
+const div = document.querySelector('.pricing-card');
+div.addEventListener('click', function() {
+  selecionarDiv(this);
+});

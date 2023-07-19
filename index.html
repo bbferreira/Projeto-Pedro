@@ -35,10 +35,15 @@
     href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik:wght@300,400;700&display=swap"
     rel="stylesheet">
 
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+  <script src="http://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
+
   <!-- 
     - flaticon
   -->
   <link rel="stylesheet" href="assets/css/flaticon.min.css">
+  <script src="https://kit.fontawesome.com/9fc8094a0d.js" crossorigin="anonymous"></script>
 
   <!-- 
     - preload images
@@ -53,6 +58,27 @@
   <!-- 
     - #HEADER
   -->
+
+  <script>
+    $(function () {
+      $("#calendario").datepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+        dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+        dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+        monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+
+
+      });
+
+      $(".calendar-icon").click(function () {
+        $(this).prev("#calendario").datepicker("show");
+      });
+
+
+    });
+  </script>
 
   <header class="header">
     <div class="header-top">
@@ -167,7 +193,7 @@
             <ul class="grid-list">
 
               <li data-filter="shaving">
-                <div class="pricing-card" onclick="onClickFunction()">
+                <div class="pricing-card" onclick="selecionarDiv(this)">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
                     <img src="./assets/images/pricing-1.jpg" width="90" height="90" alt="Hair Cutting & Fitting"
@@ -180,13 +206,13 @@
                     <p class="card-text" id="paragrafo" style="color: #ffffff;">45 minutos</p>
                   </div>
 
-                  <data class="card-price"  id="data" value="25">R$25</data>
+                  <data class="card-price" id="data" value="25">R$25</data>
 
                 </div>
               </li>
 
               <li data-filter="shaving">
-                <div class="pricing-card" onclick="onClickFunction()">
+                <div class="pricing-card" onclick="selecionarDiv(this)">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
                     <img src="./assets/images/pricing-2.jpg" width="90" height="90" alt="Shaving & Facial"
@@ -196,7 +222,7 @@
                   <div class="wrapper">
                     <h3 class="h3 card-title" style="color: #ffffff;" id="titulo">Barba</h3>
 
-                    <p class="card-text" id="paragrafo"  style="color: #ffffff;">45 minutos</p>
+                    <p class="card-text" id="paragrafo" style="color: #ffffff;">45 minutos</p>
                   </div>
 
                   <data class="card-price" value="15" id="data">R$15</data>
@@ -204,7 +230,7 @@
                 </div>
               </li>
               <li>
-                <div class="pricing-card" onclick="onClickFunction()" style="padding: 20px;">
+                <div class="pricing-card" onclick="selecionarDiv(this)" style="padding: 20px;">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
                     <img src="./assets/images/pricing-5.jpg" width="90" height="90" alt="Beauty & Spa"
@@ -212,17 +238,17 @@
                   </figure>
 
                   <div class="wrapper">
-                    <h3 class="h3 card-title " style="font-size: 1.7rem; color: #ffffff;">Corte+Barba</h3>
+                    <h3 class="h3 card-title " style="font-size: 1.7rem; color: #ffffff;" id="titulo">Corte+Barba</h3>
 
-                    <p class="card-text" style="color: #ffffff;">45 minutos</p>
+                    <p class="card-text" style="color: #ffffff;" id="paragrafo">45 minutos</p>
                   </div>
 
-                  <data class="card-price" value="40"  >R$40</data>
+                  <data class="card-price" value="40" id="data">R$40</data>
 
                 </div>
               </li>
               <li data-filter="body-treatments">
-                <div class="pricing-card" onclick="onClickFunction()">
+                <div class="pricing-card" onclick="selecionarDiv(this)">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
                     <img src="./assets/images/pricing-4.jpg" width="90" height="90" alt="Body Massage"
@@ -230,17 +256,17 @@
                   </figure>
 
                   <div class="wrapper">
-                    <h3 class="h3 card-title" style="color: #ffffff;">Luzes</h3>
+                    <h3 class="h3 card-title" style="color: #ffffff;" id="titulo">Luzes</h3>
 
-                    <p class="card-text" style="color: #ffffff;">45 minutes</p>
+                    <p class="card-text" style="color: #ffffff;" id="paragrafo">45 minutes</p>
                   </div>
 
-                  <data class="card-price" value="70" >R$70</data>
+                  <data class="card-price" value="70" id="data">R$70</data>
 
                 </div>
               </li>
               <li>
-                <div class="pricing-card" onclick="onClickFunction()">
+                <div class="pricing-card" onclick="selecionarDiv(this)">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
                     <img src="./assets/images/pricing-4.jpg" width="90" height="90" alt="Body Massage"
@@ -248,25 +274,17 @@
                   </figure>
 
                   <div class="wrapper">
-                    <h3 class="h3 card-title"style="font-size: 1.7rem; color: #ffffff;">Platinado</h3>
+                    <h3 class="h3 card-title" style="font-size: 1.7rem; color: #ffffff;" id="titulo">Platinado</h3>
 
-                    <p class="card-text" style="color: #ffffff;">45 minutes</p>
+                    <p class="card-text" style="color: #ffffff;" id="paragrafo">45 minutes</p>
                   </div>
 
-                  <data class="card-price" value="100">R$100</data>
+                  <data class="card-price" value="100" id="data">R$100</data>
 
                 </div>
               </li>
             </ul>
             <br>
-            <style>
-              .selected {
-                background-color: orange;
-                /* Outros estilos para a div selecionada */
-              }
-            </style>
-
-
             <div width="100%" class="container section appoin ">
 
               <div class="appoin-card  " width="100%">
@@ -293,36 +311,60 @@
                     <div class="input-wrapper">
                       <input type="text" name="phone" placeholder="Numero de celular" required class="input-field">
                     </div>
-                    <label for="data">Escolha uma data:</label>
-                    <input type="date" name="date" required class="input-field date">
-                    <input type="text" id="data-formatada" readonly>
-                    <h2 class=" text-center">Horários disponíveis:</h2>
-                    <div id="horarios-disponiveis">
-                    </div><br><br>
+                    <label for="data" style="color:#000000;">Escolha uma data:</label>
+                    <div class="input-with-icon">
+                      <input type="text" id="calendario" name="data" class="input-field"
+                        placeholder="Selecione sua data" required>
+                      <span class="calendar-icon"><i class="fas fa-calendar-alt"></i></span>
+                    </div>
 
-                    <label for="data">Deixe alguma observação:</label>
-                    <textarea name="message" placeholder="Observação:" required class="input-field"></textarea>
+                    <style>
+                      .input-with-icon {
+                        position: relative;
+                      }
 
-                    <button id="agendar-button" disabled type="submit" class="form-btn">
-                      <span class="span">Finalizar agendamento</span>
+                      .calendar-icon {
+                        position: absolute;
+                        top: 50%;
+                        right: 10px;
+                        transform: translateY(-50%);
+                        color: black;
+                        cursor: pointer;
 
-                      <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
-                    </button>
+                       
 
-                  </form>
+                        
+       
+                      }
+                    </style>
+                    <h2 class=" text-center" style="color:#000000;">Horários disponíveis:</h2>
+                    <button class="botao-proximo" onclick="exibirHorariosDisponiveis()">Proximo</button><br>
+                    <div id="horariosDisponiveis"></div>
+              
 
-                </div>
+                <label for="data" style="color:#000000;">Deixe alguma observação:</label>
+                <textarea name="message" placeholder="Observação:" required class="input-field"></textarea>
 
-                <figure class="card-banner img-holder" style="--width: 250; --height: 774;">
-                  <img src="./assets/images/appoin-banner-2.jpg" width="250" height="774" loading="lazy" alt=""
-                    class="img-cover">
-                </figure>
+                <button id="agendar-button" disabled type="submit" class="form-btn">
+                  <span class="span">Finalizar agendamento</span>
+
+                  <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
+                </button>
+
+                </form>
 
               </div>
+
+              <figure class="card-banner img-holder" style="--width: 250; --height: 774;">
+                <img src="./assets/images/appoin-banner-2.jpg" width="250" height="774" loading="lazy" alt=""
+                  class="img-cover">
+              </figure>
 
             </div>
 
           </div>
+
+        </div>
 
         </div>
       </section>
@@ -480,49 +522,52 @@
 
         </div>
 
-          <ul class="footer-list">
+        <ul class="footer-list">
 
-            <li>
-              <p class="footer-list-title">Contato</p>
-            </li>
+          <li>
+            <p class="footer-list-title">Contato</p>
+          </li>
 
-            <li class="footer-list-item">
-              <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+          <li class="footer-list-item">
+            <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
 
-              <address class="contact-link">
-                Rua dona rima Simão  324 
-              </address>
-            </li>
+            <a class="address"
+              href="https://www.google.com/maps/search/?api=1&query=Rua+Dona Rima Simão,+324,+Duatina,+São Paulo"
+              target="_blank">
+              Rua Dona Rima Simão - 324
+            </a>
 
-            <li class="footer-list-item" id="contato">
-              <ion-icon name="call-outline" aria-hidden="true"></ion-icon>
+          </li>
 
-              <a href="tel:+0123456789" class="contact-link">+55 (14)996977125</a>
-            </li>
+          <li class="footer-list-item" id="contato">
+            <ion-icon name="call-outline" aria-hidden="true"></ion-icon>
 
-            <li class="footer-list-item">
-              <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
+            <a href="tel:+0123456789" class="contact-link">+55 (14)996977125</a>
+          </li>
 
-              <span class="contact-link">Segunda - Sabádo, 09:00 as - 20:00</span>
-            </li>
+          <li class="footer-list-item">
+            <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
 
-            <li class="footer-list-item">
-              <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+            <span class="contact-link">Segunda - Sabádo, 09:00 as - 20:00</span>
+          </li>
 
-              <a href="mailto:support@gmail.com" class="contact-link">support@gmail.com</a>
-            </li>
+          <li class="footer-list-item">
+            <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
 
-          </ul>
+            <a href="mailto:bocardidevcompany@gmail.com" class="contact-link">bocardidevcompany@gmail.com</a>
+          </li>
 
-        </div>
+        </ul>
 
       </div>
 
-      <div class="footer-bottom">
-        <p class="copyright">
-          &copy; 2023 <a href="index.html" class="copyright-link">LosSantos Barbearia</a>.Todos os direitos reservados.
-        </p>
-      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="copyright">
+        &copy; 2023 <a href="index.html" class="copyright-link">LosSantos Barbearia</a>.Todos os direitos reservados.
+      </p>
+    </div>
 
     </div>
   </footer>

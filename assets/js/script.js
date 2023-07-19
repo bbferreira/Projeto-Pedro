@@ -91,76 +91,85 @@ addEventOnElem(filterBtns, "click", filter);
 
 // Serviços
 
-function onClickFunction() {
-  const elemento = document.querySelector('.pricing-card');
-  selecionarServico(elemento);
-  selecionarDiv(elemento);
+function mudarCorTexto(elemento) {
+  elemento.style.color = 'white';
 }
 
-const elemento = document.querySelector('.pricing-card');
-elemento.onclick = onClickFunction;
+function selecionarDiv(parametro) {
+  const divsPricingCard = document.querySelectorAll('.pricing-card');
+
+  divsPricingCard.forEach((div) => {
+    div.style.backgroundColor = '';
+    div.style.color = '';
+  });
+
+  parametro.style.backgroundColor = 'orange';
+  mudarCorTexto(parametro.querySelector('#data'));
 
 
+  const dados = [];
+  const titulo = parametro.querySelector('#titulo').innerText;
+  const paragrafo = parametro.querySelector('#paragrafo').innerText;
+  const preco = parametro.querySelector('#data').getAttribute('value');
 
-function selecionarServico(element) {
-  // Obtendo as informações dentro da div
-  const titulo = element.querySelector('#titulo').innerText;
-  const paragrafo = element.querySelector('#paragrafo').innerText;
-  const preco = element.querySelector('#data').getAttribute('value');
+  dados.push({ titulo, paragrafo, preco });
+  console.log(dados);
 
-  // Imprimindo as informações
-  console.log(titulo); // "Corte"
-  console.log(paragrafo); // "45 minutos"
-  console.log(preco); // "25"
-
-  // Aqui você pode fazer o que desejar com as informações, como salvá-las em uma variável ou realizar alguma ação adicional.
 }
 
+  // Capturar os dados da div selecionada e salvá-los em um array
 
 
-
-
-// Obtendo todas as divs com a classe "pricing-card"
 const divsPricingCard = document.querySelectorAll('.pricing-card');
 
-// Array para armazenar as informações das divs
-const informacoesDivs = [];
-
-// Iterando sobre as divs "pricing-card"
 divsPricingCard.forEach((divPricingCard) => {
-  // Obtendo as informações dentro da div
-  const titulo = divPricingCard.querySelector('#titulo').innerText;
-  const paragrafo = divPricingCard.querySelector('#paragrafo').innerText;
-  const preco = divPricingCard.querySelector('#data').getAttribute('value');
-
-  // Criando um objeto com as informações da div
-  const informacoes = {
-    titulo,
-    paragrafo,
-    preco
-  };
-  
-
-  // Adicionando o objeto ao array
-  informacoesDivs.push(informacoes);
-});
-
-// Imprimindo as informações das divs
-informacoesDivs.forEach((informacoes, index) => {
-  console.log(`Informações da div ${index + 1}:`);
-  console.log(informacoes.titulo);
-  console.log(informacoes.paragrafo);
-  console.log(informacoes.preco);
+  divPricingCard.addEventListener('click', function() {
+    selecionarDiv(this);
+  });
 });
 
 
-function selecionarDiv(element) {
-  element.style.backgroundColor = "orange";
+//calendario
+function exibirHorariosDisponiveis() {
+  var horarios = [];
+  var hora = 9;
+  var minutos = 0;
+
+  while (hora < 20 || (hora === 20 && minutos === 0)) {
+    horarios.push(hora.toString().padStart(2, '0') + ':' + minutos.toString().padStart(2, '0'));
+    minutos += 45;
+    if (minutos >= 60) {
+      minutos = 0;
+      hora++;
+    }
+  }
+
+  var horariosDiv = document.getElementById("horariosDisponiveis");
+  horariosDiv.innerHTML = '';
+
+  var horariosContainer = document.createElement("div");
+  horariosContainer.className = "horarios-container";
+
+  for (var i = 0; i < horarios.length; i++) {
+    var horario = horarios[i];
+    var button = document.createElement("button");
+    button.innerText = horario;
+    button.className = "horario";
+    button.onclick = function() {
+      selecionarHorario(this);
+    };
+    horariosContainer.appendChild(button);
+  }
+
+  horariosDiv.appendChild(horariosContainer);
 }
 
+function selecionarHorario(button) {
+  var horarios = document.getElementsByClassName("horario");
+  for (var i = 0; i < horarios.length; i++) {
+    horarios[i].classList.remove("selecionado");
+  }
 
-
-const div = document.querySelector('.pricing-card');
-div.addEventListener('click', function() {
-  selecionarDiv(this);
-});
+  button.classList.add("selecionado");
+  
+}

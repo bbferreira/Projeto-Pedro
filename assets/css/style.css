@@ -502,6 +502,24 @@ body {
   width: 100%;
 }
 
+
+.input-with-icon {
+  position: relative;
+}
+
+.calendar-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: black;
+  cursor: pointer;
+}
+
+.address:hover{
+  color: white;
+}
+
 .pricing-card .card-banner {
   border-radius: 50%;
   overflow: hidden;
@@ -512,6 +530,39 @@ body {
 .pricing-card .h3 {
   --fs-24: 2rem;
   margin-block-end: 8px;
+}
+
+.botao-proximo{
+  background-color:#ccc;
+color: #fff;
+padding: 10px 20px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+
+.horarios-container {
+  display: flex;
+  flex-direction: row;
+ 
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.horario {
+  background-color: #f8f9fa;
+  color: #333;
+  padding: 8px 12px;
+  margin: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.horario:hover,
+.horario.selecionado {
+  background-color: orange;
+  color: #fff;
 }
 
 .pricing-card .card-price {

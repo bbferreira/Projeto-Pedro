@@ -541,12 +541,8 @@ border-radius: 4px;
 cursor: pointer;
 }
 
-.horarios-container {
-  display: flex;
-  flex-direction: row;
- 
-  flex-wrap: wrap;
-  margin-top: 10px;
+.botao-proximo:hover{
+  background-color: orange;
 }
 
 .horario {

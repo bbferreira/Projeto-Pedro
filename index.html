@@ -276,7 +276,7 @@
                   <div class="wrapper">
                     <h3 class="h3 card-title" style="font-size: 1.7rem; color: #ffffff;" id="titulo">Platinado</h3>
 
-                    <p class="card-text" style="color: #ffffff;" id="paragrafo">45 minutes</p>
+                    <p class="card-text" style="color: #ffffff;" id="paragrafo">45 minutos</p>
                   </div>
 
                   <data class="card-price" value="100" id="data">R$100</data>
@@ -305,7 +305,7 @@
                   <form action="" class="appoin-form">
 
                     <div class="input-wrapper">
-                      <input type="text" name="name" placeholder="Seu nome" required class="input-field">
+                      <input type="text" name="name" placeholder="Seu nome" required class="input-field" >
                     </div>
 
                     <div class="input-wrapper">
@@ -330,41 +330,45 @@
                         transform: translateY(-50%);
                         color: black;
                         cursor: pointer;
+                      }
 
-                       
+                      .div-horarios {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: row;
 
-                        
-       
+                        flex-wrap: wrap;
+                        margin-top: 10px;
                       }
                     </style>
                     <h2 class=" text-center" style="color:#000000;">Horários disponíveis:</h2>
-                    <button class="botao-proximo" onclick="exibirHorariosDisponiveis()">Proximo</button><br>
-                    <div id="horariosDisponiveis"></div>
-              
+                    <button class="botao-proximo"  type="button" onclick="exibirHorariosDisponiveis()">Proximo</button><br>
+                    <div class="div-horarios" id="horariosDisponiveis"></div>
 
-                <label for="data" style="color:#000000;">Deixe alguma observação:</label>
-                <textarea name="message" placeholder="Observação:" required class="input-field"></textarea>
 
-                <button id="agendar-button" disabled type="submit" class="form-btn">
-                  <span class="span">Finalizar agendamento</span>
+                    <label for="data" style="color:#000000;">Quer deixar algum detalhe do corte?</label>
+                    <textarea name="message" placeholder="Escreva em detalhes o seu corte:" class="input-field"></textarea>
 
-                  <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
-                </button>
+                    <button id="agendar-button"   class="form-btn"   onclick="finalizarAgendamento()"  type="button">
+                      <span class="span">Finalizar agendamento</span>
 
-                </form>
+                      <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
+                    </button>
+
+                  </form>
+
+                </div>
+
+                <figure class="card-banner img-holder" style="--width: 250; --height: 774;">
+                  <img src="./assets/images/appoin-banner-2.jpg" width="250" height="774" loading="lazy" alt=""
+                    class="img-cover">
+                </figure>
 
               </div>
-
-              <figure class="card-banner img-holder" style="--width: 250; --height: 774;">
-                <img src="./assets/images/appoin-banner-2.jpg" width="250" height="774" loading="lazy" alt=""
-                  class="img-cover">
-              </figure>
 
             </div>
 
           </div>
-
-        </div>
 
         </div>
       </section>

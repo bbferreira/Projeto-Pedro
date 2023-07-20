@@ -125,6 +125,7 @@ function selecionarDiv(parametro) {
 //calendario
 var horariosDisponiveis = [];
 
+
 function getHorariosDisponiveis() {
   var horarios = [];
   var now = new Date();

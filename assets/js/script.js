@@ -89,6 +89,31 @@ const filter = function () {
 
 addEventOnElem(filterBtns, "click", filter);
 
+
+//Corte 
+
+
+function showImage() {
+  const imageViewer = document.getElementById('image-viewer');
+  const imageContainer = document.getElementById('image-container');
+  const img = document.querySelector('.img-cover');
+
+  // Exibe o visualizador de corte
+  imageViewer.style.display = 'block';
+
+  // Carrega a imagem clicada no visualizador
+  const newImg = document.createElement('img');
+  newImg.src = img.src;
+  imageContainer.innerHTML = '';
+  imageContainer.appendChild(newImg);
+}
+
+function closeViewer() {
+  const imageViewer = document.getElementById('image-viewer');
+  imageViewer.style.display = 'none';
+}
+
+
 // Serviços
 
 function mudarCorTexto(elemento) {

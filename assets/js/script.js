@@ -228,7 +228,7 @@ function finalizarAgendamento() {
   const mensagemCodificada = encodeURIComponent(mensagem);
 
   // Abre o WhatsApp com a mensagem preenchida
-  const numeroWhatsApp = '5514997605588'; // Substitua pelo número do WhatsApp desejado
+  const numeroWhatsApp = '5514996977125'; // Substitua pelo número do WhatsApp desejado
   const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensagemCodificada}`;
   window.open(urlWhatsApp);
 

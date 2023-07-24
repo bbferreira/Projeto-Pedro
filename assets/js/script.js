@@ -184,20 +184,33 @@ function getHorariosDisponiveis() {
   horariosDisponiveis = horarios.slice();
 
   return horarios;
+  
 }
 
 function finalizarAgendamento() {
   const nome = document.querySelector('input[name="name"]').value;
   const celular = document.querySelector('input[name="phone"]').value;
   const dataSelecionada = document.querySelector('input[name="data"]').value;
-  const observacao = document.querySelector('textarea[name="message"]').value;
+ const observacao = document.querySelector('textarea[name="message"]').value;
 
+ const horarioSelecionadoElement = document.querySelector('.horario.selecionado');
+ if (horarioSelecionadoElement) {
+   const horarioSelecionado = horarioSelecionadoElement.innerText;
+   dadosFormulario.push({ campo: 'Horário', valor: horarioSelecionado });
+ } else {
+   // Caso o usuário não tenha selecionado nenhum horário, pode exibir uma mensagem de erro ou realizar outra ação apropriada.
+   alert('Por favor, selecione um horário disponível.');
+   return; // Retorna para não prosseguir com o agendamento sem o horário selecionado.
+ }
   const dadosFormulario = [
     { campo: 'Nome', valor: nome },
     { campo: 'Celular', valor: celular },
     { campo: 'Data', valor: dataSelecionada },
     { campo: 'Observação', valor: observacao }
   ];
+
+   // Adicionar o horário selecionado aos dados do formulário
+   
 
   let dadosServicos = [];
   // Aqui você pode adicionar a lógica para percorrer o array de dados dos serviços selecionados (dados) e adicionar os dados relevantes ao array dadosServicos
@@ -209,17 +222,21 @@ function finalizarAgendamento() {
       const titulo = div.querySelector('#titulo').innerText;
       const paragrafo = div.querySelector('#paragrafo').innerText;
       const preco = div.querySelector('#data').getAttribute('value');
-      dadosServicos.push({ titulo, paragrafo, preco });
+      dadosServicos.push({ titulo, preco });
     }
   });
 
   // Combinar os dados dos serviços e do formulário em uma única string
   let mensagem = 'Agendamento:\n';
   for (const item of dadosServicos) {
-    mensagem += `${item.titulo}: ${item.paragrafo}: R$${item.preco}\n`;
+    mensagem += `Serviço:${item.titulo}: Valor: R$${item.preco}\n`;
   }
 
-  mensagem += '\nDados do formulário:\n';
+  mensagem += '\nHorário:\n';
+  mensagem += horarioSelecionado;
+
+
+  mensagem += '\nCliente:\n';
   for (const item of dadosFormulario) {
     mensagem += `${item.campo}: ${item.valor}\n`;
   }

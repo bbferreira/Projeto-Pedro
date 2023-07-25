@@ -566,6 +566,11 @@ cursor: pointer;
   font-family: var(--ff-oswald);
   font-size: var(--fs-30);
   font-weight: var(--fw-500);
+
+}
+
+.pricing-card{
+  cursor: pointer;
 }
 
 

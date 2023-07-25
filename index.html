@@ -39,26 +39,32 @@
   <script src="https://code.jquery.com/jquery-1.8.2.js"></script>
   <script src="https://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
   <Script>
-  $(function () {
-    $("#calendario").datepicker({
-      dateFormat: 'dd/mm/yy',
-      dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
-      dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-      dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-      monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-      monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
-  
-  
-    });
-  
-    $(".calendar-icon").click(function () {
-      $(this).prev("#calendario").datepicker("show");
-    });
-  
-  
-  });
+    let dataSelecionada = new Date();
+    $(function () {
+      $("#calendario").datepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+        dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+        dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+        monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
-</Script>
+
+      });
+
+
+
+    
+
+
+      $(".calendar-icon").click(function () {
+        $(this).prev("#calendario").datepicker("show");
+      });
+
+
+    });
+
+  </Script>
   <!-- 
     - flaticon
   -->
@@ -232,7 +238,7 @@
                 <div class="pricing-card" onclick="selecionarDiv(this)" style="padding: 20px;">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
-                    <img src="./assets/images/pricing-5.jpg" width="90" height="90" alt="Beauty & Spa"
+                    <img src="./assets/images/corte+barba.png" width="90" height="90" alt="Beauty & Spa"
                       class="img-cover">
                   </figure>
 
@@ -250,8 +256,7 @@
                 <div class="pricing-card" onclick="selecionarDiv(this)">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
-                    <img src="./assets/images/pricing-4.jpg" width="90" height="90" alt="Body Massage"
-                      class="img-cover">
+                    <img src="./assets/images/luzes.png" width="90" height="90" alt="Body Massage" class="img-cover">
                   </figure>
 
                   <div class="wrapper">
@@ -268,7 +273,7 @@
                 <div class="pricing-card" onclick="selecionarDiv(this)">
 
                   <figure class="card-banner img-holder" style="--width: 90; --height: 90;">
-                    <img src="./assets/images/pricing-4.jpg" width="90" height="90" alt="Body Massage"
+                    <img src="./assets/images/platinado.png" width="90" height="90" alt="Body Massage"
                       class="img-cover">
                   </figure>
 
@@ -304,7 +309,7 @@
                   <form action="" class="appoin-form">
 
                     <div class="input-wrapper">
-                      <input type="text" name="name" placeholder="Seu nome" required class="input-field" >
+                      <input type="text" name="name" placeholder="Seu nome" required class="input-field">
                     </div>
 
                     <div class="input-wrapper">
@@ -341,14 +346,16 @@
                       }
                     </style>
                     <h2 class=" text-center" style="color:#000000;">Horários disponíveis:</h2>
-                    <button class="botao-proximo"  type="button" onclick="exibirHorariosDisponiveis()">Proximo</button><br>
+                    <button class="botao-proximo" type="button"
+                      onclick="exibirHorariosDisponiveis()">Proximo</button><br>
                     <div class="div-horarios" id="horariosDisponiveis"></div>
 
 
                     <label for="data" style="color:#000000;">Quer deixar algum detalhe do corte?</label>
-                    <textarea name="message" placeholder="Escreva em detalhes o seu corte:" class="input-field"></textarea>
+                    <textarea name="message" placeholder="Escreva em detalhes o seu corte:"
+                      class="input-field"></textarea>
 
-                    <button id="agendar-button"   class="form-btn"   onclick="finalizarAgendamento()"  type="button">
+                    <button id="agendar-button" class="form-btn" onclick="finalizarAgendamento()" type="button">
                       <span class="span">Finalizar agendamento</span>
 
                       <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
@@ -381,7 +388,7 @@
               <h2 class="h2 section-title">Cortes</h2>
 
               <p class="section-text">
-                "Descubra o estilo que  mais combina com você"
+                "Descubra o estilo que mais combina com você"
               </p>
             </div>
 
@@ -403,17 +410,16 @@
                     class="img-cover">
                 </figure>
 
-                <div class="card-content">
+              </div>
+            </li>
 
-                  <h3 class="h3 card-title">Hair Cutting</h3>
+            <li>
+              <div class="gallery-card">
 
-                  <p class="card-text">Barbers & Salon serviços</p>
-
-                  <a href="#" class="card-btn" aria-label="Read more">
-                    <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
-                  </a>
-
-                </div>
+                <figure class="card-banner img-holder" style="--width: 422; --height: 550;">
+                  <img src="./assets/images/corte-leoncio.jpg" width="422" height="550" loading="lazy"
+                    alt="Hair Cutting" class="img-cover">
+                </figure>
 
               </div>
             </li>
@@ -422,44 +428,9 @@
               <div class="gallery-card">
 
                 <figure class="card-banner img-holder" style="--width: 422; --height: 550;">
-                  <img src="./assets/images/corte-leoncio.jpg" width="422" height="550" loading="lazy" alt="Hair Cutting"
-                    class="img-cover">
+                  <img src="./assets/images/corte-douglinha.jpg" width="422" height="550" loading="lazy"
+                    alt="Hair Cutting" class="img-cover">
                 </figure>
-
-                <div class="card-content">
-
-                  <h3 class="h3 card-title">Hair Cutting</h3>
-
-                  <p class="card-text">Barbers & Salon serviços</p>
-
-                  <a href="#" class="card-btn" aria-label="Read more">
-                    <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
-                  </a>
-
-                </div>
-
-              </div>
-            </li>
-
-            <li>
-              <div class="gallery-card">
-
-                <figure class="card-banner img-holder" style="--width: 422; --height: 550;">
-                  <img src="./assets/images/corte-douglinha.jpg" width="422" height="550" loading="lazy" alt="Hair Cutting"
-                    class="img-cover">
-                </figure>
-
-                <div class="card-content">
-
-                  <h3 class="h3 card-title">Hair Cutting</h3>
-
-                  <p class="card-text">Barbers & Salon serviços</p>
-
-                  <a href="#" class="card-btn" aria-label="Read more">
-                    <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
-                  </a>
-
-                </div>
 
               </div>
             </li>
@@ -471,18 +442,6 @@
                   <img src="./assets/images/platinado.jpg" width="422" height="550" loading="lazy" alt="Hair Cutting"
                     class="img-cover">
                 </figure>
-
-                <div class="card-content">
-
-                  <h3 class="h3 card-title">Hair Cutting</h3>
-
-                  <p class="card-text">Barbers & Salon serviços</p>
-
-                  <a href="#" class="card-btn" aria-label="Read more">
-                    <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
-                  </a>
-
-                </div>
 
               </div>
             </li>

@@ -153,7 +153,7 @@ function selecionarDiv(parametro) {
   console.log(dados);
 }
 
-//calendario
+//horarios
 var horariosDisponiveis = [];
 
 
@@ -187,33 +187,72 @@ function getHorariosDisponiveis() {
   
 }
 
+
+
+
+function exibirHorariosDisponiveis() {
+  var horarios = getHorariosDisponiveis();
+
+  var horariosDiv = document.getElementById("horariosDisponiveis");
+  horariosDiv.innerHTML = '';
+
+  for (var i = 0; i < horarios.length; i++) {
+    var horario = horarios[i];
+    var button = document.createElement("button");
+    button.innerText = horario;
+    button.className = "horario";
+    button.onclick = function() {
+      // Desmarcar o horário selecionado anteriormente
+      const horariosSelecionados = document.querySelectorAll('.horario.selecionado');
+      horariosSelecionados.forEach((horarioSelecionado) => {
+        horarioSelecionado.classList.remove('selecionado');
+      });
+      // Marcar o novo horário selecionado
+      this.classList.add('selecionado');
+
+      
+    };
+    horariosDiv.appendChild(button);
+  }
+
+  // Adicionar o event listener para prevenir o comportamento padrão do clique
+  horariosDiv.addEventListener('click', function(event) {
+    event.preventDefault();
+  });
+}
+
+
+
+
 function finalizarAgendamento() {
   const nome = document.querySelector('input[name="name"]').value;
   const celular = document.querySelector('input[name="phone"]').value;
   const dataSelecionada = document.querySelector('input[name="data"]').value;
- const observacao = document.querySelector('textarea[name="message"]').value;
+  const observacao = document.querySelector('textarea[name="message"]').value;
+  const horarioSelecionado = document.querySelector('.horario.selecionado');
 
- const horarioSelecionadoElement = document.querySelector('.horario.selecionado');
- if (horarioSelecionadoElement) {
-   const horarioSelecionado = horarioSelecionadoElement.innerText;
-   dadosFormulario.push({ campo: 'Horário', valor: horarioSelecionado });
- } else {
-   // Caso o usuário não tenha selecionado nenhum horário, pode exibir uma mensagem de erro ou realizar outra ação apropriada.
-   alert('Por favor, selecione um horário disponível.');
-   return; // Retorna para não prosseguir com o agendamento sem o horário selecionado.
- }
+  // Verifica se um horário foi selecionado
+  const horario = horarioSelecionado ? horarioSelecionado.innerText : 'Nenhum horário selecionado';
+
   const dadosFormulario = [
     { campo: 'Nome', valor: nome },
     { campo: 'Celular', valor: celular },
     { campo: 'Data', valor: dataSelecionada },
-    { campo: 'Observação', valor: observacao }
+    { campo: 'Observação', valor: observacao },
+    { campo: 'Horário', valor: horario } // Renomeie o campo para 'Horário' para evitar confusão com a variável 'horario'
   ];
+
 
    // Adicionar o horário selecionado aos dados do formulário
    
 
   let dadosServicos = [];
+  
   // Aqui você pode adicionar a lógica para percorrer o array de dados dos serviços selecionados (dados) e adicionar os dados relevantes ao array dadosServicos
+
+
+
+  
 
   // Adicionando os dados dos serviços selecionados ao array dadosServicos
   const divsPricingCard = document.querySelectorAll('.pricing-card');
@@ -226,14 +265,15 @@ function finalizarAgendamento() {
     }
   });
 
+
+ 
+  
   // Combinar os dados dos serviços e do formulário em uma única string
   let mensagem = 'Agendamento:\n';
   for (const item of dadosServicos) {
     mensagem += `Serviço:${item.titulo}: Valor: R$${item.preco}\n`;
   }
 
-  mensagem += '\nHorário:\n';
-  mensagem += horarioSelecionado;
 
 
   mensagem += '\nCliente:\n';
@@ -260,31 +300,4 @@ function finalizarAgendamento() {
   exibirHorariosDisponiveis();
 }
 
-function exibirHorariosDisponiveis() {
-  var horarios = getHorariosDisponiveis();
 
-  var horariosDiv = document.getElementById("horariosDisponiveis");
-  horariosDiv.innerHTML = '';
-
-  for (var i = 0; i < horarios.length; i++) {
-    var horario = horarios[i];
-    var button = document.createElement("button");
-    button.innerText = horario;
-    button.className = "horario";
-    button.onclick = function() {
-      // Desmarcar o horário selecionado anteriormente
-      const horariosSelecionados = document.querySelectorAll('.horario.selecionado');
-      horariosSelecionados.forEach((horarioSelecionado) => {
-        horarioSelecionado.classList.remove('selecionado');
-      });
-      // Marcar o novo horário selecionado
-      this.classList.add('selecionado');
-    };
-    horariosDiv.appendChild(button);
-  }
-
-  // Adicionar o event listener para prevenir o comportamento padrão do clique
-  horariosDiv.addEventListener('click', function(event) {
-    event.preventDefault();
-  });
-}

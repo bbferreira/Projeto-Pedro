@@ -203,6 +203,7 @@ function getHorariosDisponiveis(data) {
   // Armazena os horários disponíveis na variável global
   horariosDisponiveis = horarios.slice();
 
+  console.log('Horários Disponíveis:', horariosDisponiveis);
   return horarios;
 }
 
@@ -260,6 +261,9 @@ function finalizarAgendamento() {
   // Verifica se um horário foi selecionado
   const horario = horarioSelecionado ? horarioSelecionado.innerText : 'Nenhum horário selecionado';
 
+  
+  
+
   const dadosFormulario = [
     { campo: 'Nome', valor: nome },
     { campo: 'Celular', valor: celular },
@@ -290,6 +294,7 @@ function finalizarAgendamento() {
       dadosServicos.push({ titulo, preco });
     }
   });
+
 
 
  

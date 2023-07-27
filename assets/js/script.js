@@ -152,31 +152,51 @@ function selecionarDiv(parametro) {
   // Exibir os dados no console.log
   console.log(dados);
 }
-
-//horarios
 var horariosDisponiveis = [];
 
-
-function getHorariosDisponiveis() {
+function getHorariosDisponiveis(data) {
   var horarios = [];
   var now = new Date();
   var currentDay = now.getDate();
+  var currentHour = now.getHours();
+
+  // Verifica se é após as 20 horas do dia atual
+  if (isSameDay(data, now) && currentHour >= 20) {
+    alert('Desculpe, os horários para hoje após as 20 horas já foram encerrados. Por favor, escolha outro dia no calendário.');
+    return []; // Retorna um array vazio para não exibir horários após as 20 horas do dia atual
+  }
 
   var hora = 9;
   var minutos = 0;
 
-  while (hora < 20 || (hora === 20 && minutos === 0)) {
-    var agendamentoData = new Date(now);
+  while (true) {
+    var agendamentoData = new Date(data);
     agendamentoData.setHours(hora, minutos);
 
-    if (agendamentoData > now) {
-      horarios.push(hora.toString().padStart(2, '0') + ':' + minutos.toString().padStart(2, '0'));
+    if (hora >= 20 && minutos === 0) {
+      break;
     }
+
+    // Verifica se é um horário passado no dia atual
+    if (isSameDay(data, now) && agendamentoData <= now) {
+      minutos += 45;
+      if (minutos >= 60) {
+        minutos = 0;
+        hora++;
+      }
+      continue;
+    }
+
+    horarios.push(hora.toString().padStart(2, '0') + ':' + minutos.toString().padStart(2, '0'));
 
     minutos += 45;
     if (minutos >= 60) {
       minutos = 0;
       hora++;
+    }
+
+    if (hora === 20 && minutos === 0) {
+      break;
     }
   }
 
@@ -184,17 +204,18 @@ function getHorariosDisponiveis() {
   horariosDisponiveis = horarios.slice();
 
   return horarios;
-  
 }
 
-
-
-
 function exibirHorariosDisponiveis() {
-  var horarios = getHorariosDisponiveis();
+  var dataSelecionada = $("#calendario").datepicker("getDate");
+  var horarios = getHorariosDisponiveis(dataSelecionada);
 
   var horariosDiv = document.getElementById("horariosDisponiveis");
   horariosDiv.innerHTML = '';
+
+  if (horarios.length === 0) {
+    return; // Não exibe os horários se não houver disponíveis
+  }
 
   for (var i = 0; i < horarios.length; i++) {
     var horario = horarios[i];
@@ -209,8 +230,6 @@ function exibirHorariosDisponiveis() {
       });
       // Marcar o novo horário selecionado
       this.classList.add('selecionado');
-
-      
     };
     horariosDiv.appendChild(button);
   }
@@ -220,7 +239,14 @@ function exibirHorariosDisponiveis() {
     event.preventDefault();
   });
 }
+// Exibir horários disponíveis ao carregar a página inicial
+exibirHorariosDisponiveis();
 
+function isSameDay(date1, date2) {
+  return date1.getDate() === date2.getDate() &&
+         date1.getMonth() === date2.getMonth() &&
+         date1.getFullYear() === date2.getFullYear();
+}
 
 
 
@@ -296,8 +322,9 @@ function finalizarAgendamento() {
     horariosDisponiveis.splice(indexHorario, 1);
   }
 
-  // Atualiza a lista de horários disponíveis
-  exibirHorariosDisponiveis();
+  
+    // Atualiza a lista de horários disponíveis
+exibirHorariosDisponiveis();
 }
 
 

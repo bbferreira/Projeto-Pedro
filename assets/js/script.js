@@ -214,6 +214,7 @@ function exibirHorariosDisponiveis() {
   var horariosDiv = document.getElementById("horariosDisponiveis");
   horariosDiv.innerHTML = '';
 
+
   if (horarios.length === 0) {
     return; // Não exibe os horários se não houver disponíveis
   }
@@ -222,24 +223,36 @@ function exibirHorariosDisponiveis() {
     var button = document.createElement("button");
     button.innerText = horario;
     button.className = "horario";
+
+    // Adicionar o evento de clique para exibir o alerta de confirmação
     button.onclick = function() {
+      // Isolar o horário selecionado em uma variável
+      let horarioSelecionadoTexto = this.innerText;
+
       // Verifica se o botão do horário já foi agendado
       if (this.classList.contains('agendado')) {
         alert("Desculpe, este horário já foi selecionado por outra pessoa. Por favor, escolha outro horário.");
         return;
       }
 
- 
+      // Exibir o alerta de confirmação
+      let confirmacao = window.confirm(`Você tem certeza que deseja agendar para o horário: ${horarioSelecionadoTexto}? Você não poderá alterá-lo depois`);
 
-      // Marcar o novo horário selecionado
-      this.classList.add('selecionado');
+      if (confirmacao) {
+        // Marcar o novo horário selecionado com a classe "selecionado"
+        this.classList.add('selecionado');
 
-      // Isolar o horário selecionado em uma variável
-      const horarioSelecionadoTexto = this.innerText;
+        // Ajustar o estilo do elemento para ocultá-lo (display: none)
+        this.style.display = 'none';
 
-      // Exibir o horário selecionado no console.log
-      console.log('Horário Selecionado:', horarioSelecionadoTexto);
+
+        alert(`Horário ${horarioSelecionadoTexto} selecionado com sucesso! Pode clicar no botão finalizar agendamente e se preferir deixar alguma observação do corte!`);
+      } else {
+        // Caso o usuário cancele a seleção, remove a classe "selecionado" do botão do horário
+        this.classList.remove('selecionado');
+      }
     };
+
     horariosDiv.appendChild(button);
   }
 
@@ -260,6 +273,10 @@ function isSameDay(date1, date2) {
 
 var horarioAgendado = null;
 function finalizarAgendamento() {
+
+  
+
+
   const nome = document.querySelector('input[name="name"]').value;
   const celular = document.querySelector('input[name="phone"]').value;
   const dataSelecionada = document.querySelector('input[name="data"]').value;
@@ -269,48 +286,19 @@ function finalizarAgendamento() {
   // Verifica se um horário foi selecionado
   const horario = horarioSelecionado ? horarioSelecionado.innerText : 'Nenhum horário selecionado';
 
+  if (!horarioSelecionado) {
+    // Exibe um alerta informando que o usuário precisa selecionar um horário antes de finalizar o agendamento
+    alert("Por favor, selecione um horário disponível antes de finalizar o agendamento.");
+    return;
+  }
 
-   // Verifica se um horário foi selecionado
-   if (horarioSelecionado) {
-    // Verifica se o horário já foi agendado por alguém
-    if (horarioSelecionado.classList.contains('agendado')) {
-      alert("Desculpe, este horário já foi selecionado por outra pessoa. Por favor, escolha outro horário.");
-      return;
-    }
-
-     // Mostra o alerta de confirmação para o usuário
-     var confirmacao = confirm("Você tem certeza de que deseja selecionar este horário? Esta ação não poderá ser desfeita.");
-
-     if (confirmacao) {
-       // Adiciona a classe "agendado" para marcar o horário selecionado com a cor laranja
-       horarioSelecionado.classList.add('agendado');
- 
-       // Armazena o horário selecionado na variável global
-       horarioAgendado = horarioSelecionado.innerText;
- 
-       // Desabilita o botão do horário selecionado após a confirmação
-       let botaoHorarioSelecionado = horarioSelecionado;
-       botaoHorarioSelecionado.disabled = true;
-     } else {
-       // Caso o usuário cancele a seleção, remove a classe "selecionado" do botão do horário
-       horarioSelecionado.classList.remove('selecionado');
-      }
-
-    // Adiciona a classe "agendado" para marcar o horário selecionado com a cor laranja
-    horarioSelecionado.classList.add('agendado');
-
-    // Armazena o horário selecionado na variável global
-    horarioAgendado = horarioSelecionado.innerText;
-
-    // Desabilita o botão do horário selecionado após o agendamento
   
 
-    // Atualiza a lista de horários disponíveis
-    exibirHorariosDisponiveis();
-  } else {
-    // Caso nenhum horário tenha sido selecionado, exibe um alerta
-    alert("Por favor, selecione um horário disponível antes de finalizar o agendamento.");
-  }
+  // Atualiza a lista de horários disponíveis
+  exibirHorariosDisponiveis();
+
+
+
   
   
 
@@ -328,7 +316,7 @@ function finalizarAgendamento() {
 
   let dadosServicos = [];
   
-  // Aqui você pode adicionar a lógica para percorrer o array de dados dos serviços selecionados (dados) e adicionar os dados relevantes ao array dadosServicos
+  
 
 
 
@@ -370,9 +358,8 @@ function finalizarAgendamento() {
   window.open(urlWhatsApp);
 
 
-  
-    // Atualiza a lista de horários disponíveis
-exibirHorariosDisponiveis();
+  // Exibe a caixa de diálogo de confirmação
+ 
 }
 
 

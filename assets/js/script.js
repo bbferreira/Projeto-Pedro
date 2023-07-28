@@ -217,20 +217,28 @@ function exibirHorariosDisponiveis() {
   if (horarios.length === 0) {
     return; // Não exibe os horários se não houver disponíveis
   }
-
   for (var i = 0; i < horarios.length; i++) {
     var horario = horarios[i];
     var button = document.createElement("button");
     button.innerText = horario;
     button.className = "horario";
     button.onclick = function() {
-      // Desmarcar o horário selecionado anteriormente
-      const horariosSelecionados = document.querySelectorAll('.horario.selecionado');
-      horariosSelecionados.forEach((horarioSelecionado) => {
-        horarioSelecionado.classList.remove('selecionado');
-      });
+      // Verifica se o botão do horário já foi agendado
+      if (this.classList.contains('agendado')) {
+        alert("Desculpe, este horário já foi selecionado por outra pessoa. Por favor, escolha outro horário.");
+        return;
+      }
+
+ 
+
       // Marcar o novo horário selecionado
       this.classList.add('selecionado');
+
+      // Isolar o horário selecionado em uma variável
+      const horarioSelecionadoTexto = this.innerText;
+
+      // Exibir o horário selecionado no console.log
+      console.log('Horário Selecionado:', horarioSelecionadoTexto);
     };
     horariosDiv.appendChild(button);
   }
@@ -250,7 +258,7 @@ function isSameDay(date1, date2) {
 }
 
 
-
+var horarioAgendado = null;
 function finalizarAgendamento() {
   const nome = document.querySelector('input[name="name"]').value;
   const celular = document.querySelector('input[name="phone"]').value;
@@ -261,6 +269,48 @@ function finalizarAgendamento() {
   // Verifica se um horário foi selecionado
   const horario = horarioSelecionado ? horarioSelecionado.innerText : 'Nenhum horário selecionado';
 
+
+   // Verifica se um horário foi selecionado
+   if (horarioSelecionado) {
+    // Verifica se o horário já foi agendado por alguém
+    if (horarioSelecionado.classList.contains('agendado')) {
+      alert("Desculpe, este horário já foi selecionado por outra pessoa. Por favor, escolha outro horário.");
+      return;
+    }
+
+     // Mostra o alerta de confirmação para o usuário
+     var confirmacao = confirm("Você tem certeza de que deseja selecionar este horário? Esta ação não poderá ser desfeita.");
+
+     if (confirmacao) {
+       // Adiciona a classe "agendado" para marcar o horário selecionado com a cor laranja
+       horarioSelecionado.classList.add('agendado');
+ 
+       // Armazena o horário selecionado na variável global
+       horarioAgendado = horarioSelecionado.innerText;
+ 
+       // Desabilita o botão do horário selecionado após a confirmação
+       let botaoHorarioSelecionado = horarioSelecionado;
+       botaoHorarioSelecionado.disabled = true;
+     } else {
+       // Caso o usuário cancele a seleção, remove a classe "selecionado" do botão do horário
+       horarioSelecionado.classList.remove('selecionado');
+      }
+
+    // Adiciona a classe "agendado" para marcar o horário selecionado com a cor laranja
+    horarioSelecionado.classList.add('agendado');
+
+    // Armazena o horário selecionado na variável global
+    horarioAgendado = horarioSelecionado.innerText;
+
+    // Desabilita o botão do horário selecionado após o agendamento
+  
+
+    // Atualiza a lista de horários disponíveis
+    exibirHorariosDisponiveis();
+  } else {
+    // Caso nenhum horário tenha sido selecionado, exibe um alerta
+    alert("Por favor, selecione um horário disponível antes de finalizar o agendamento.");
+  }
   
   
 
@@ -295,10 +345,9 @@ function finalizarAgendamento() {
     }
   });
 
-
-
  
-  
+
+
   // Combinar os dados dos serviços e do formulário em uma única string
   let mensagem = 'Agendamento:\n';
   for (const item of dadosServicos) {
@@ -320,12 +369,6 @@ function finalizarAgendamento() {
   const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensagemCodificada}`;
   window.open(urlWhatsApp);
 
-  // Remove o horário agendado dos horários disponíveis
-  const horarioAgendado = dataSelecionada.split(' ')[1];
-  const indexHorario = horariosDisponiveis.indexOf(horarioAgendado);
-  if (indexHorario !== -1) {
-    horariosDisponiveis.splice(indexHorario, 1);
-  }
 
   
     // Atualiza a lista de horários disponíveis

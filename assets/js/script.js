@@ -1,3 +1,16 @@
+//conexao banco de dados 
+
+let  db = openDatabase("dbHorarios", "1.0","Meu primeiro banco",  4048);
+db.transaction(function(criar){
+ criar.executeSql("CREATE TABLE users(ID PRIMARY KEY, nome TEXT, senha TEXT)");
+});  
+
+
+
+
+
+
+
 'use strict';
 
 
@@ -207,6 +220,35 @@ function getHorariosDisponiveis(data) {
   return horarios;
 }
 
+function salvarHorarios(horarioSelecionadoTexto) {
+  db.transaction(function(armazenar) {
+    armazenar.executeSql("SELECT nome FROM users", [], function(tx, resultado) {
+      // Verifica se a consulta retornou resultados
+      if (resultado.rows.length > 0) {
+        let horariosSalvos = resultado.rows.item(0).nome || ''; // Recupera os horários salvos ou inicia com string vazia caso não haja registro
+
+        // Concatena o novo horário selecionado à lista de horários salvos
+        horariosSalvos += horarioSelecionadoTexto + ';';
+
+        armazenar.executeSql("UPDATE users SET nome = ?", [horariosSalvos], function(tx, resultado) {
+          console.log('Horário inserido no banco de dados:', horarioSelecionadoTexto);
+        }, function(tx, erro) {
+          console.error('Erro ao inserir horário no banco de dados:', erro.message);
+        });
+      } else {
+        // Caso não haja resultados, insere um novo registro na tabela
+        armazenar.executeSql("INSERT INTO users (nome) VALUES (?)", [horarioSelecionadoTexto], function(tx, resultado) {
+          console.log('Horário inserido no banco de dados:', horarioSelecionadoTexto);
+        }, function(tx, erro) {
+          console.error('Erro ao inserir horário no banco de dados:', erro.message);
+        });
+      }
+    });
+  });
+}
+
+
+
 function exibirHorariosDisponiveis() {
   var dataSelecionada = $("#calendario").datepicker("getDate");
   var horarios = getHorariosDisponiveis(dataSelecionada);
@@ -229,11 +271,7 @@ function exibirHorariosDisponiveis() {
       // Isolar o horário selecionado em uma variável
       let horarioSelecionadoTexto = this.innerText;
 
-      // Verifica se o botão do horário já foi agendado
-      if (this.classList.contains('agendado')) {
-        alert("Desculpe, este horário já foi selecionado por outra pessoa. Por favor, escolha outro horário.");
-        return;
-      }
+    
 
       // Exibir o alerta de confirmação
       let confirmacao = window.confirm(`Você tem certeza que deseja agendar para o horário: ${horarioSelecionadoTexto}? Você não poderá alterá-lo depois`);
@@ -242,11 +280,29 @@ function exibirHorariosDisponiveis() {
         // Marcar o novo horário selecionado com a classe "selecionado"
         this.classList.add('selecionado');
 
+       // Salvar o horário agendado no localStorage
+       const dataSelecionada = $("#calendario").datepicker("getDate");
+       const dataString = dataSelecionada.toISOString().slice(0, 10); // Obtém a data no formato 'yyyy-mm-dd'
+       const horariosAgendados = getHorariosAgendados();
+       if (!horariosAgendados[dataString]) {
+         horariosAgendados[dataString] = [];
+       }
+       horariosAgendados[dataString].push(horarioSelecionadoTexto);
+       salvarHorariosAgendados(horariosAgendados);
+
+
+    
+      
+
         // Ajustar o estilo do elemento para ocultá-lo (display: none)
         this.style.display = 'none';
 
 
         alert(`Horário ${horarioSelecionadoTexto} selecionado com sucesso! Pode clicar no botão finalizar agendamente e se preferir deixar alguma observação do corte!`);
+
+   // Chamar a função salvarHorarios passando o horarioSelecionadoTexto como argumento
+   salvarHorarios(horarioSelecionadoTexto);
+
       } else {
         // Caso o usuário cancele a seleção, remove a classe "selecionado" do botão do horário
         this.classList.remove('selecionado');
@@ -272,10 +328,17 @@ function isSameDay(date1, date2) {
 
 
 var horarioAgendado = null;
+// Função para recuperar os horários agendados do localStorage
+function getHorariosAgendados() {
+  const horariosAgendadosString = localStorage.getItem('horariosAgendados');
+  return horariosAgendadosString ? JSON.parse(horariosAgendadosString) : {};
+}
+// Função para salvar os horários agendados no localStorage
+function salvarHorariosAgendados(horariosAgendados) {
+  localStorage.setItem('horariosAgendados', JSON.stringify(horariosAgendados));
+}
+
 function finalizarAgendamento() {
-
-  
-
 
   const nome = document.querySelector('input[name="name"]').value;
   const celular = document.querySelector('input[name="phone"]').value;
@@ -293,7 +356,7 @@ function finalizarAgendamento() {
   }
 
   
-
+  
   // Atualiza a lista de horários disponíveis
   exibirHorariosDisponiveis();
 
@@ -363,3 +426,4 @@ function finalizarAgendamento() {
 }
 
 
+       

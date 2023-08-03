@@ -165,6 +165,9 @@ function selecionarDiv(parametro) {
   // Exibir os dados no console.log
   console.log(dados);
 }
+
+
+
 var horariosDisponiveis = [];
 
 function getHorariosDisponiveis(data) {
@@ -220,25 +223,33 @@ function getHorariosDisponiveis(data) {
   return horarios;
 }
 
-function salvarHorarios(horarioSelecionadoTexto) {
+
+//salvar banco de dados 
+function salvarHorarios(dataSelecionada, horarioSelecionadoTexto) { 
   db.transaction(function(armazenar) {
-    armazenar.executeSql("SELECT nome FROM users", [], function(tx, resultado) {
-      // Verifica se a consulta retornou resultados
+    armazenar.executeSql("SELECT * FROM users WHERE senha = ?", [dataSelecionada], function(tx, resultado) {
+      // Verifica se a consulta retornou resultados para o dia selecionado
       if (resultado.rows.length > 0) {
         let horariosSalvos = resultado.rows.item(0).nome || ''; // Recupera os horários salvos ou inicia com string vazia caso não haja registro
+
+        // Verifica se o horário já está cadastrado para o dia selecionado
+        if (horariosSalvos.includes(horarioSelecionadoTexto)) {
+          console.log('Horário já cadastrado para o dia selecionado:', horarioSelecionadoTexto);
+          return;
+        }
 
         // Concatena o novo horário selecionado à lista de horários salvos
         horariosSalvos += horarioSelecionadoTexto + ';';
 
-        armazenar.executeSql("UPDATE users SET nome = ?", [horariosSalvos], function(tx, resultado) {
-          console.log('Horário inserido no banco de dados:', horarioSelecionadoTexto);
+        armazenar.executeSql("UPDATE users SET nome = ? WHERE senha = ?", [horariosSalvos, dataSelecionada], function(tx, resultado) {
+          console.log('Horário inserido no banco de dados para o dia selecionado:', horarioSelecionadoTexto);
         }, function(tx, erro) {
           console.error('Erro ao inserir horário no banco de dados:', erro.message);
         });
       } else {
-        // Caso não haja resultados, insere um novo registro na tabela
-        armazenar.executeSql("INSERT INTO users (nome) VALUES (?)", [horarioSelecionadoTexto], function(tx, resultado) {
-          console.log('Horário inserido no banco de dados:', horarioSelecionadoTexto);
+        // Caso não haja resultados para o dia selecionado, insere um novo registro na tabela
+        armazenar.executeSql("INSERT INTO users (nome, senha) VALUES (?, ?)", [horarioSelecionadoTexto, dataSelecionada], function(tx, resultado) {
+          console.log('Horário inserido no banco de dados para o dia selecionado:', horarioSelecionadoTexto);
         }, function(tx, erro) {
           console.error('Erro ao inserir horário no banco de dados:', erro.message);
         });
@@ -248,6 +259,42 @@ function salvarHorarios(horarioSelecionadoTexto) {
 }
 
 
+
+
+
+
+// Função para verificar se o horário está agendado para o dia selecionado
+function horarioEstaDisponivel(dataSelecionada, horarioSelecionadoTexto) {
+  return new Promise((resolve, reject) => {
+    db.transaction(function (armazenar) {
+      armazenar.executeSql("SELECT nome FROM users WHERE senha = ?", [dataSelecionada], function (tx, resultado) {
+        // Verifica se a consulta retornou resultados
+        if (resultado.rows.length > 0) {
+          let horariosSalvos = resultado.rows.item(0).nome || ''; // Recupera os horários salvos ou inicia com string vazia caso não haja registro
+
+          // Verifica se o horário já está cadastrado para o dia selecionado
+          if (horariosSalvos.includes(horarioSelecionadoTexto)) {
+            // Horário já está agendado, portanto não está disponível
+            resolve(false);
+          } else {
+            // Horário ainda não foi agendado, portanto está disponível
+            resolve(true);
+          }
+        } else {
+          // Caso não haja resultados, o horário está disponível
+          resolve(true);
+        }
+      });
+    });
+  });
+}
+
+
+
+
+
+
+// exibirhorario disponivel 
 
 function exibirHorariosDisponiveis() {
   var dataSelecionada = $("#calendario").datepicker("getDate");
@@ -266,6 +313,8 @@ function exibirHorariosDisponiveis() {
     button.innerText = horario;
     button.className = "horario";
 
+
+
     // Adicionar o evento de clique para exibir o alerta de confirmação
     button.onclick = function() {
       // Isolar o horário selecionado em uma variável
@@ -283,6 +332,7 @@ function exibirHorariosDisponiveis() {
        // Salvar o horário agendado no localStorage
        const dataSelecionada = $("#calendario").datepicker("getDate");
        const dataString = dataSelecionada.toISOString().slice(0, 10); // Obtém a data no formato 'yyyy-mm-dd'
+      
        const horariosAgendados = getHorariosAgendados();
        if (!horariosAgendados[dataString]) {
          horariosAgendados[dataString] = [];
@@ -290,18 +340,16 @@ function exibirHorariosDisponiveis() {
        horariosAgendados[dataString].push(horarioSelecionadoTexto);
        salvarHorariosAgendados(horariosAgendados);
 
+ // Chamar a função salvarHorarios passando o horarioSelecionadoTexto e a dataSelecionada como argumentos
+ const dataSelecionadaFormatada = $.datepicker.formatDate('yy-mm-dd', dataSelecionada);
+ salvarHorarios(dataSelecionadaFormatada, horarioSelecionadoTexto);
 
+ // Ajustar o estilo do elemento para ocultá-lo (display: none)
+ this.style.display = 'none';
     
-      
+       alert(`Horário ${horarioSelecionadoTexto} selecionado com sucesso! Pode clicar no botão finalizar agendamente e se preferir deixar alguma observação do corte!`);
 
-        // Ajustar o estilo do elemento para ocultá-lo (display: none)
-        this.style.display = 'none';
-
-
-        alert(`Horário ${horarioSelecionadoTexto} selecionado com sucesso! Pode clicar no botão finalizar agendamente e se preferir deixar alguma observação do corte!`);
-
-   // Chamar a função salvarHorarios passando o horarioSelecionadoTexto como argumento
-   salvarHorarios(horarioSelecionadoTexto);
+  
 
       } else {
         // Caso o usuário cancele a seleção, remove a classe "selecionado" do botão do horário
@@ -338,6 +386,10 @@ function salvarHorariosAgendados(horariosAgendados) {
   localStorage.setItem('horariosAgendados', JSON.stringify(horariosAgendados));
 }
 
+
+
+
+// Finalizar agendamento
 function finalizarAgendamento() {
 
   const nome = document.querySelector('input[name="name"]').value;
@@ -421,7 +473,7 @@ function finalizarAgendamento() {
   window.open(urlWhatsApp);
 
 
-  // Exibe a caixa de diálogo de confirmação
+ 
  
 }
 

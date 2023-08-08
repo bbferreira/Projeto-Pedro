@@ -176,7 +176,6 @@ body {
 
 
 
-
 /*-----------------------------------*\
   #REUSED STYLE
 \*-----------------------------------*/
@@ -293,7 +292,7 @@ body {
 .header-top-list { justify-content: center; }
 
 .header-top-list .social-list {
-  gap: 20px;
+  gap: 5px;
   padding-block: 15px;
 }
 

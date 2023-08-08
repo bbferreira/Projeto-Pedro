@@ -1,9 +1,18 @@
+
 //conexao banco de dados 
 
 let  db = openDatabase("dbHorarios", "1.0","Meu primeiro banco",  4048);
 db.transaction(function(criar){
  criar.executeSql("CREATE TABLE users(ID PRIMARY KEY, nome TEXT, senha TEXT)");
 });  
+
+
+
+
+
+
+
+
 
 
 
@@ -104,7 +113,6 @@ addEventOnElem(filterBtns, "click", filter);
 
 
 
-//jquey calendar
 
 
 
@@ -224,28 +232,29 @@ function getHorariosDisponiveis(data) {
 }
 
 
-//salvar banco de dados 
+
+
 function salvarHorarios(dataSelecionada, horarioSelecionadoTexto) { 
   db.transaction(function(armazenar) {
     armazenar.executeSql("SELECT * FROM users WHERE senha = ?", [dataSelecionada], function(tx, resultado) {
       // Verifica se a consulta retornou resultados para o dia selecionado
       if (resultado.rows.length > 0) {
         let horariosSalvos = resultado.rows.item(0).nome || ''; // Recupera os horários salvos ou inicia com string vazia caso não haja registro
+        let horariosSalvosArray = horariosSalvos.split(';'); // Converte os horários salvos em um array
 
-        // Verifica se o horário já está cadastrado para o dia selecionado
-        if (horariosSalvos.includes(horarioSelecionadoTexto)) {
-          console.log('Horário já cadastrado para o dia selecionado:', horarioSelecionadoTexto);
-          return;
+        // Verifica se o horário já foi salvo para o dia selecionado
+        if (horariosSalvosArray.includes(horarioSelecionadoTexto)) {
+          console.log('Horário já está inserido no banco de dados:', horarioSelecionadoTexto);
+        } else {
+          // Adiciona o novo horário selecionado à lista de horários salvos
+          horariosSalvos += horarioSelecionadoTexto + ';';
+
+          armazenar.executeSql("UPDATE users SET nome = ? WHERE senha = ?", [horariosSalvos, dataSelecionada], function(tx, resultado) {
+            console.log('Horário inserido no banco de dados para o dia selecionado:', horarioSelecionadoTexto);
+          }, function(tx, erro) {
+            console.error('Erro ao inserir horário no banco de dados:', erro.message);
+          });
         }
-
-        // Concatena o novo horário selecionado à lista de horários salvos
-        horariosSalvos += horarioSelecionadoTexto + ';';
-
-        armazenar.executeSql("UPDATE users SET nome = ? WHERE senha = ?", [horariosSalvos, dataSelecionada], function(tx, resultado) {
-          console.log('Horário inserido no banco de dados para o dia selecionado:', horarioSelecionadoTexto);
-        }, function(tx, erro) {
-          console.error('Erro ao inserir horário no banco de dados:', erro.message);
-        });
       } else {
         // Caso não haja resultados para o dia selecionado, insere um novo registro na tabela
         armazenar.executeSql("INSERT INTO users (nome, senha) VALUES (?, ?)", [horarioSelecionadoTexto, dataSelecionada], function(tx, resultado) {
@@ -257,42 +266,6 @@ function salvarHorarios(dataSelecionada, horarioSelecionadoTexto) {
     });
   });
 }
-
-
-
-
-
-
-// Função para verificar se o horário está agendado para o dia selecionado
-function horarioEstaDisponivel(dataSelecionada, horarioSelecionadoTexto) {
-  return new Promise((resolve, reject) => {
-    db.transaction(function (armazenar) {
-      armazenar.executeSql("SELECT nome FROM users WHERE senha = ?", [dataSelecionada], function (tx, resultado) {
-        // Verifica se a consulta retornou resultados
-        if (resultado.rows.length > 0) {
-          let horariosSalvos = resultado.rows.item(0).nome || ''; // Recupera os horários salvos ou inicia com string vazia caso não haja registro
-
-          // Verifica se o horário já está cadastrado para o dia selecionado
-          if (horariosSalvos.includes(horarioSelecionadoTexto)) {
-            // Horário já está agendado, portanto não está disponível
-            resolve(false);
-          } else {
-            // Horário ainda não foi agendado, portanto está disponível
-            resolve(true);
-          }
-        } else {
-          // Caso não haja resultados, o horário está disponível
-          resolve(true);
-        }
-      });
-    });
-  });
-}
-
-
-
-
-
 
 // exibirhorario disponivel 
 
@@ -307,12 +280,32 @@ function exibirHorariosDisponiveis() {
   if (horarios.length === 0) {
     return; // Não exibe os horários se não houver disponíveis
   }
-  for (var i = 0; i < horarios.length; i++) {
-    var horario = horarios[i];
-    var button = document.createElement("button");
-    button.innerText = horario;
-    button.className = "horario";
 
+  db.transaction(function(transacao) {
+    transacao.executeSql(
+      "SELECT * FROM users WHERE senha = ?",
+      [dataSelecionada.toISOString().slice(0, 10)],
+      function(tx, resultado) {
+        var horariosAgendados = [];
+
+        if (resultado.rows.length > 0) {
+          var horariosSalvosArray = resultado.rows.item(0).nome.split(';');
+          horariosAgendados = horariosSalvosArray.filter(function(horario) {
+            return horario !== '';
+          });
+
+          // Filtrar horários disponíveis para exibir apenas os não agendados
+          horarios = horarios.filter(function(horario) {
+            return !horariosAgendados.includes(horario);
+          });
+        }
+
+        // Exibir os botões de horários disponíveis
+        for (var i = 0; i < horarios.length; i++) {
+          var horario = horarios[i];
+          var button = document.createElement("button");
+          button.innerText = horario;
+          button.className = "horario";
 
 
     // Adicionar o evento de clique para exibir o alerta de confirmação
@@ -359,6 +352,12 @@ function exibirHorariosDisponiveis() {
 
     horariosDiv.appendChild(button);
   }
+},
+function(tx, erro) {
+  console.error('Erro ao executar consulta SQL:', erro.message);
+}
+);
+});
 
   // Adicionar o event listener para prevenir o comportamento padrão do clique
   horariosDiv.addEventListener('click', function(event) {

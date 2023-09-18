@@ -1,11 +1,5 @@
 
-//conexao banco de dados 
-
-let  db = openDatabase("dbHorarios", "1.0","Meu primeiro banco",  4048);
-db.transaction(function(criar){
- criar.executeSql("CREATE TABLE users(ID PRIMARY KEY, nome TEXT, senha TEXT)");
-});  
-
+ 
 
 
 
@@ -230,45 +224,7 @@ function getHorariosDisponiveis(data) {
   console.log('Horários Disponíveis:', horariosDisponiveis);
   return horarios;
 }
-
-
-
-
-function salvarHorarios(dataSelecionada, horarioSelecionadoTexto) { 
-  db.transaction(function(armazenar) {
-    armazenar.executeSql("SELECT * FROM users WHERE senha = ?", [dataSelecionada], function(tx, resultado) {
-      // Verifica se a consulta retornou resultados para o dia selecionado
-      if (resultado.rows.length > 0) {
-        let horariosSalvos = resultado.rows.item(0).nome || ''; // Recupera os horários salvos ou inicia com string vazia caso não haja registro
-        let horariosSalvosArray = horariosSalvos.split(';'); // Converte os horários salvos em um array
-
-        // Verifica se o horário já foi salvo para o dia selecionado
-        if (horariosSalvosArray.includes(horarioSelecionadoTexto)) {
-          console.log('Horário já está inserido no banco de dados:', horarioSelecionadoTexto);
-        } else {
-          // Adiciona o novo horário selecionado à lista de horários salvos
-          horariosSalvos += horarioSelecionadoTexto + ';';
-
-          armazenar.executeSql("UPDATE users SET nome = ? WHERE senha = ?", [horariosSalvos, dataSelecionada], function(tx, resultado) {
-            console.log('Horário inserido no banco de dados para o dia selecionado:', horarioSelecionadoTexto);
-          }, function(tx, erro) {
-            console.error('Erro ao inserir horário no banco de dados:', erro.message);
-          });
-        }
-      } else {
-        // Caso não haja resultados para o dia selecionado, insere um novo registro na tabela
-        armazenar.executeSql("INSERT INTO users (nome, senha) VALUES (?, ?)", [horarioSelecionadoTexto, dataSelecionada], function(tx, resultado) {
-          console.log('Horário inserido no banco de dados para o dia selecionado:', horarioSelecionadoTexto);
-        }, function(tx, erro) {
-          console.error('Erro ao inserir horário no banco de dados:', erro.message);
-        });
-      }
-    });
-  });
-}
-
-// exibirhorario disponivel 
-
+let  horarioSelecionado = null;
 function exibirHorariosDisponiveis() {
   var dataSelecionada = $("#calendario").datepicker("getDate");
   var horarios = getHorariosDisponiveis(dataSelecionada);
@@ -276,94 +232,111 @@ function exibirHorariosDisponiveis() {
   var horariosDiv = document.getElementById("horariosDisponiveis");
   horariosDiv.innerHTML = '';
 
-
   if (horarios.length === 0) {
-    return; // Não exibe os horários se não houver disponíveis
+      return;
   }
 
-  db.transaction(function(transacao) {
-    transacao.executeSql(
-      "SELECT * FROM users WHERE senha = ?",
-      [dataSelecionada.toISOString().slice(0, 10)],
-      function(tx, resultado) {
-        var horariosAgendados = [];
-
-        if (resultado.rows.length > 0) {
-          var horariosSalvosArray = resultado.rows.item(0).nome.split(';');
-          horariosAgendados = horariosSalvosArray.filter(function(horario) {
-            return horario !== '';
-          });
-
-          // Filtrar horários disponíveis para exibir apenas os não agendados
-          horarios = horarios.filter(function(horario) {
-            return !horariosAgendados.includes(horario);
-          });
-        }
-
-        // Exibir os botões de horários disponíveis
-        for (var i = 0; i < horarios.length; i++) {
-          var horario = horarios[i];
+  for (var i = 0; i < horarios.length; i++) {
+      (function (horario) {
           var button = document.createElement("button");
           button.innerText = horario;
-          button.className = "horario";
+          var horarioSelecionadoTexto = horario;
+          button.className = "horario horario-button";
 
+          // Fazer uma solicitação AJAX para buscar a cor do servidor
+        
 
-    // Adicionar o evento de clique para exibir o alerta de confirmação
-    button.onclick = function() {
-      // Isolar o horário selecionado em uma variável
-      let horarioSelecionadoTexto = this.innerText;
+          button.addEventListener("click", function () {
+              // Seu código de clique aqui
+              button.style.backgroundColor = "orange";
+              button.style.color = "white"; // Defina a cor do texto como branco
+              agendarHorario(horario, horarios, horariosDiv, button);
+          });
 
-    
-
-      // Exibir o alerta de confirmação
-      let confirmacao = window.confirm(`Você tem certeza que deseja agendar para o horário: ${horarioSelecionadoTexto}? Você não poderá alterá-lo depois`);
-
-      if (confirmacao) {
-        // Marcar o novo horário selecionado com a classe "selecionado"
-        this.classList.add('selecionado');
-
-       // Salvar o horário agendado no localStorage
-       const dataSelecionada = $("#calendario").datepicker("getDate");
-       const dataString = dataSelecionada.toISOString().slice(0, 10); // Obtém a data no formato 'yyyy-mm-dd'
-      
-       const horariosAgendados = getHorariosAgendados();
-       if (!horariosAgendados[dataString]) {
-         horariosAgendados[dataString] = [];
-       }
-       horariosAgendados[dataString].push(horarioSelecionadoTexto);
-       salvarHorariosAgendados(horariosAgendados);
-
- // Chamar a função salvarHorarios passando o horarioSelecionadoTexto e a dataSelecionada como argumentos
- const dataSelecionadaFormatada = $.datepicker.formatDate('yy-mm-dd', dataSelecionada);
- salvarHorarios(dataSelecionadaFormatada, horarioSelecionadoTexto);
-
- // Ajustar o estilo do elemento para ocultá-lo (display: none)
- this.style.display = 'none';
-    
-       alert(`Horário ${horarioSelecionadoTexto} selecionado com sucesso! Pode clicar no botão finalizar agendamente e se preferir deixar alguma observação do corte!`);
-
-  
-
-      } else {
-        // Caso o usuário cancele a seleção, remove a classe "selecionado" do botão do horário
-        this.classList.remove('selecionado');
-      }
-    };
-
-    horariosDiv.appendChild(button);
+          horariosDiv.appendChild(button);
+      })(horarios[i]);
   }
-},
-function(tx, erro) {
-  console.error('Erro ao executar consulta SQL:', erro.message);
-}
-);
-});
 
-  // Adicionar o event listener para prevenir o comportamento padrão do clique
-  horariosDiv.addEventListener('click', function(event) {
-    event.preventDefault();
+  horariosDiv.addEventListener('click', function (event) {
+      event.preventDefault();
   });
 }
+
+
+
+
+function agendarHorario(horario, horarios, horariosDiv, button) {
+  var horarioSelecionadoTexto = horario;
+  var dataSelecionadas = $("#calendario").val();
+  var botoes = document.getElementsByClassName("horario");
+  var cor = "orange"
+
+  // Chama a função para verificar se o horário já foi agendado
+  $.ajax({
+      type: "POST",
+      url: "inserir_horario.php", // Substitua pelo caminho correto do seu arquivo PHP
+      data: { horario: horarioSelecionadoTexto, data: dataSelecionadas },
+      success: function (response) {
+          var data = JSON.parse(response); // Converte a resposta JSON em um objeto JavaScript
+
+          if (data.error) {
+              alert(data.error); // Exibe a mensagem de erro do servidor
+          } else {
+              var confirmacao = window.confirm(`Você tem certeza que deseja agendar para o horário: ${horarioSelecionadoTexto}? Você não poderá alterá-lo depois`);
+              if (confirmacao) {
+                  button.disabled = true; // Desabilita o botão após o agendamento
+                  if (data.agendado) {
+                      alert(`Este horário já foi agendado por outra pessoa,  por favor slecione  outro`);
+                  } else {
+                      $.ajax({
+                          type: "POST",
+                          url: "inserir_horario.php", // Substitua pelo caminho correto do seu arquivo PHP
+                          data: { horario: horarioSelecionadoTexto, data: dataSelecionadas },
+                          success: function (response) {
+                              console.log(response);
+                              alert(`Seu Horário ${horarioSelecionadoTexto} foi selecionado com sucesso! Pode clicar no botão finalizar agendamento e, se preferir, deixar alguma observação do corte!`);
+
+                              // Fazer uma solicitação AJAX para buscar a cor do servidor
+                              $.ajax({
+                                  type: "GET", // Use um método GET para buscar a cor
+                                  url: "funcoes.php",
+                                  data: {  horario: horarioSelecionadoTexto, cor: cor },
+                                  success: function (data) {
+                                      // response deve conter a cor do banco de dados
+                                      
+                                          // Aplicar a cor recuperada ao botão
+                                          button.style.backgroundColor = "orange";
+                                          button.style.color = "white"; // Defina a cor do texto como branco
+                                      
+                                  },
+                                  error: function (error) {
+                                      console.log(error);
+                                  }
+                              });
+
+                              document.getElementById("agendar-button").addEventListener("click", function () {
+                                  finalizarAgendamento(horarioSelecionadoTexto);
+                              });
+                          },
+                          error: function (error) {
+                              console.log(error);
+                              alert("Erro ao inserir horário.");
+                          }
+                      });
+                  }
+              }
+          }
+      },
+      error: function (error) {
+          console.log(error);
+          alert("Erro ao verificar horário.");
+      }
+  });
+}
+
+
+
+  
 // Exibir horários disponíveis ao carregar a página inicial
 exibirHorariosDisponiveis();
 
@@ -374,54 +347,33 @@ function isSameDay(date1, date2) {
 }
 
 
-var horarioAgendado = null;
-// Função para recuperar os horários agendados do localStorage
-function getHorariosAgendados() {
-  const horariosAgendadosString = localStorage.getItem('horariosAgendados');
-  return horariosAgendadosString ? JSON.parse(horariosAgendadosString) : {};
-}
-// Função para salvar os horários agendados no localStorage
-function salvarHorariosAgendados(horariosAgendados) {
-  localStorage.setItem('horariosAgendados', JSON.stringify(horariosAgendados));
-}
+
+
+
+
+// Exibir horários disponíveis ao carregar a página inicial
+exibirHorariosDisponiveis();
 
 
 
 
 // Finalizar agendamento
-function finalizarAgendamento() {
+function finalizarAgendamento(horarioSelecionadoTexto) {
 
   const nome = document.querySelector('input[name="name"]').value;
   const celular = document.querySelector('input[name="phone"]').value;
   const dataSelecionada = document.querySelector('input[name="data"]').value;
   const observacao = document.querySelector('textarea[name="message"]').value;
-  const horarioSelecionado = document.querySelector('.horario.selecionado');
-
-  // Verifica se um horário foi selecionado
-  const horario = horarioSelecionado ? horarioSelecionado.innerText : 'Nenhum horário selecionado';
-
-  if (!horarioSelecionado) {
-    // Exibe um alerta informando que o usuário precisa selecionar um horário antes de finalizar o agendamento
-    alert("Por favor, selecione um horário disponível antes de finalizar o agendamento.");
-    return;
-  }
-
-  
-  
-  // Atualiza a lista de horários disponíveis
-  exibirHorariosDisponiveis();
-
+const horarioSelecionado = horarioSelecionadoTexto;
 
 
   
-  
-
   const dadosFormulario = [
     { campo: 'Nome', valor: nome },
     { campo: 'Celular', valor: celular },
     { campo: 'Data', valor: dataSelecionada },
     { campo: 'Observação', valor: observacao },
-    { campo: 'Horário', valor: horario } // Renomeie o campo para 'Horário' para evitar confusão com a variável 'horario'
+    { campo: 'Horário', valor: horarioSelecionado },
   ];
 
 
@@ -438,8 +390,10 @@ function finalizarAgendamento() {
 
   // Adicionando os dados dos serviços selecionados ao array dadosServicos
   const divsPricingCard = document.querySelectorAll('.pricing-card');
+  let servicoSelecionado = false; // Variável para rastrear se um serviço foi selecionado
   divsPricingCard.forEach((div) => {
     if (div.style.backgroundColor === 'orange') {
+      servicoSelecionado = true;
       const titulo = div.querySelector('#titulo').innerText;
       const paragrafo = div.querySelector('#paragrafo').innerText;
       const preco = div.querySelector('#data').getAttribute('value');
@@ -447,7 +401,84 @@ function finalizarAgendamento() {
     }
   });
 
+  
+
+
  
+  if (!servicoSelecionado) {
+    alert('Por favor, escolha um serviço antes de finalizar o agendamento.');
+    return; // Não permita que o agendamento seja finalizado sem escolher um serviço
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   // Combinar os dados dos serviços e do formulário em uma única string
@@ -477,4 +508,3 @@ function finalizarAgendamento() {
 }
 
 
-       

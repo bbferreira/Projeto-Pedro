@@ -554,11 +554,7 @@ cursor: pointer;
   cursor: pointer;
 }
 
-.horario:hover,
-.horario.selecionado {
-  background-color: orange;
-  color: #fff;
-}
+
 
 .pricing-card .card-price {
   color: var(--indian-yellow);
@@ -573,9 +569,6 @@ cursor: pointer;
 }
 
 
-.agendado{
-  background-color: orange;
-}
 
 
 
@@ -628,6 +621,14 @@ cursor: pointer;
   background-color: var(--indian-yellow);
   color: var(--white);
 }
+
+
+/* Adicione este código CSS ao seu arquivo de estilo */
+.btn-active {
+  background-color: orange !important; ;
+  color: white !important;
+}
+
 
 
 /* Estilo do visualizador de corte */
